@@ -1,0 +1,28 @@
+.footer {
+  background-color: #5c6c56;
+  color: white;
+  text-align: center;
+  padding: 40px 0;
+}
+
+.footer a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+}
+
+.footer a img {
+  width: 30px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.footer p {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #dcdcdc;
+}
+
+.language-selector {
+  margin-top: 20px;
+}

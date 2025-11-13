@@ -1,0 +1,101 @@
+
+
+/* Le conteneur principal prend tout l’écran */
+.signin-page {
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;   /* ✅ centre horizontalement */
+  align-items: center;       /* ✅ centre verticalement */
+  background: linear-gradient(to bottom right, #d4c3a3, #6b7a63);
+  box-sizing: border-box;
+}
+
+/* Le formulaire en lui-même */
+.signin-form {
+  background: rgba(255, 255, 255, 0.4); /* effet transparent */
+  padding: 60px 80px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+}
+
+/* Titre */
+.signin-form h2 {
+  color: #2f3830;
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+}
+
+/* Champs */
+.signin-form input {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.signin-form input:focus {
+  border-color: #5c6c56;
+}
+
+/* Bouton */
+.signin-submit {
+  background-color: #5c6c56;
+  color: white;
+  border: none;
+  padding: 14px 30px;
+  border-radius: 999px;
+  width:200px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.signin-submit:hover {
+  background-color: #4c5847;
+}
+
+/* Liens en dessous */
+.signin-footer-links {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #5c6c56;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.95rem;
+  text-decoration: underline;
+}
+
+.no-account {
+  color: #555;
+}
+
+.signup-link {
+  color: #5c6c56;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup-link:hover {
+  text-decoration: underline;
+}
+
+
+
+
+
