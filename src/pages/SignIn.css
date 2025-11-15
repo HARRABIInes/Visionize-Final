@@ -23,76 +23,271 @@
 }
 
 /* Titre */
-.signin-form h2 {
-  color: #2f3830;
-  font-size: 2.2rem;
-  margin-bottom: 20px;
-}
-
-/* Champs */
-.signin-form input {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 1rem;
-  outline: none;
-}
-
-.signin-form input:focus {
-  border-color: #5c6c56;
-}
-
-/* Bouton */
-.signin-submit {
-  background-color: #5c6c56;
-  color: white;
-  border: none;
-  padding: 14px 30px;
-  border-radius: 999px;
-  width:200px;
-  font-size: 1rem;
+/* === SIGNIN MODAL OVERLAY === */
+.signin-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.signin-submit:hover {
-  background-color: #4c5847;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-/* Liens en dessous */
-.signin-footer-links {
-  margin-top: 20px;
+/* === MODAL WINDOW === */
+.signin-modal {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+  animation: slideUp 0.3s ease;
+  pointer-events: auto;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* === CLOSE BUTTON === */
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7b7f73;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #3b4134;
+}
+
+/* === MODAL CONTENT === */
+.modal-content {
+  padding: 50px 40px 40px;
+}
+
+.modal-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.modal-header h2 {
+  font-size: 1.8rem;
+  color: #3b4134;
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+
+.modal-header p {
+  font-size: 0.95rem;
+  color: #7b7f73;
+  margin: 0;
+}
+
+/* === FORM === */
+.signin-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  gap: 18px !important;
+  background: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  text-align: left !important;
 }
 
-.link-button {
-  background: none;
-  border: none;
-  color: #5c6c56;
-  cursor: pointer;
-  padding: 0;
+/* === FORM GROUP === */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3b4134;
+}
+
+.form-group input {
+  padding: 12px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
   font-size: 0.95rem;
-  text-decoration: underline;
+  font-family: inherit;
+  background-color: #f9f9f9;
+  transition: all 0.2s ease;
 }
 
-.no-account {
-  color: #555;
+.form-group input:focus {
+  outline: none;
+  border-color: #bfa87f;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(191, 168, 127, 0.1);
 }
 
-.signup-link {
+.form-group input::placeholder {
+  color: #ccc;
+}
+
+/* === REMEMBER & FORGOT === */
+.remember-forgot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin: 8px 0;
+}
+
+.remember {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #7b7f73;
+  font-weight: 500;
+  margin: 0;
+}
+
+.remember input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #5c6c56;
+}
+
+.forgot-password {
   color: #5c6c56;
   text-decoration: none;
   font-weight: 600;
+  transition: color 0.2s ease;
 }
 
-.signup-link:hover {
+.forgot-password:hover {
+  color: #4c5847;
   text-decoration: underline;
+}
+
+/* === SIGNIN BUTTON === */
+.btn-signin {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #5c6c56, #4c5847);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 6px 16px rgba(92, 108, 86, 0.2);
+  margin-top: 10px;
+}
+
+.btn-signin:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(92, 108, 86, 0.3);
+}
+
+.btn-signin:active {
+  transform: translateY(0);
+}
+
+/* === SIGNIN FOOTER === */
+.signin-footer {
+  text-align: center;
+  margin-top: 18px;
+}
+
+.signin-footer p {
+  font-size: 0.9rem;
+  color: #7b7f73;
+  margin: 0;
+}
+
+.signin-footer a {
+  color: #5c6c56;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.signin-footer a:hover {
+  color: #bfa87f;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 600px) {
+  .signin-modal {
+    max-width: 100%;
+    border-radius: 16px;
+  }
+
+  .modal-content {
+    padding: 45px 25px 30px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .modal-header p {
+    font-size: 0.9rem;
+  }
+
+  .form-group input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  .modal-close {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+  }
+
+  .remember-forgot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 }
 
 

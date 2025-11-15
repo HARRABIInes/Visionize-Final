@@ -19,7 +19,6 @@ export default function Header() {
           <li><a href="#discover">Discover</a></li>
           <li><a href="#tools">Tools</a></li>
           <li><a href="#tutorial">Tutorial</a></li>
-          <li><Link to="/signin">Sign In</Link></li>
         </ul>
       </nav>
     </header>

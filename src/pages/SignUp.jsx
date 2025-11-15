@@ -1,26 +1,145 @@
-import React from "react";
+import React, { useState } from "react";
 import "./SignUp.css";
 
-function SignUp() {
+function SignUp({ onClose, onSwitchToSignIn }) {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    profession: "",
+    birthDate: "",
+    password: "",
+    verifyPassword: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add validation logic here
+    console.log("Form submitted:", formData);
+  };
+
   return (
-    <div className="signup-container">
-      <form className="signup-form">
-        <h2>Create Your Account</h2>
+    <div className="signup-modal-overlay" onClick={onClose}>
+      <div className="signup-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose} title="Close">&times;</button>
+        
+        <div className="modal-content">
+          <div className="modal-header">
+            <h2>Create Your Account</h2>
+            <p>Join thousands of teams already managing projects with Visionize</p>
+          </div>
 
-        <input type="text" placeholder="Name" required />
-        <input type="text" placeholder="Family Name" required />
-        <input type="email" placeholder="Email" required />
-        <input type="text" placeholder="Profession" required />
-        <input type="date" placeholder="Birth Date" required />
-        <input type="password" placeholder="Password" required />
-        <input type="password" placeholder="Verify Password" required />
+          <form className="signup-form" onSubmit={handleSubmit}>
+            <div className="form-group-row">
+              <div className="form-group">
+                <label>First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="John"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder="Doe"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
 
-        <button type="submit">Sign Up</button>
+            <div className="form-group">
+              <label>Email Address</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="you@example.com"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-        <div className="links">
-          <p>Already have an account? <a href="/signin">Sign In</a></p>
+            <div className="form-group">
+              <label>Profession</label>
+              <input
+                type="text"
+                name="profession"
+                placeholder="Project Manager"
+                value={formData.profession}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Birth Date</label>
+              <input
+                type="date"
+                name="birthDate"
+                value={formData.birthDate}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="form-group-row">
+              <div className="form-group">
+                <label>Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  name="verifyPassword"
+                  placeholder="••••••••"
+                  value={formData.verifyPassword}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="terms">
+              <input type="checkbox" id="terms" required />
+              <label htmlFor="terms">
+                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+              </label>
+            </div>
+
+            <button type="submit" className="btn-signup">Create Account</button>
+
+            <div className="form-footer">
+              <p>Already have an account? <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToSignIn(); }}>Sign In</a></p>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

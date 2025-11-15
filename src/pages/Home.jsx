@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./Home.css";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 
 export default function Home() {
   const [selectedTool, setSelectedTool] = useState(null);
+  const [showSignIn, setShowSignIn] = useState(false);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   const toolImages = {
     "Task List": "/assets/images/tasklist.png",
@@ -89,12 +93,12 @@ export default function Home() {
           <a href="#tutorial">Tutorial</a>
         </nav>
         <div className="navbar-actions">
-          <a href="/signin" className="navbar-ghost">
+          <button onClick={() => setShowSignIn(true)} className="navbar-ghost">
             Log in
-          </a>
-          <a href="/signin" className="navbar-cta">
+          </button>
+          <button onClick={() => setShowSignUp(true)} className="navbar-cta">
             Get Started
-          </a>
+          </button>
         </div>
       </header>
 
@@ -116,9 +120,9 @@ export default function Home() {
             </p>
 
             <div className="hero-cta-row">
-              <a href="/signin" className="hero-cta-primary">
+              <button onClick={() => setShowSignUp(true)} className="hero-cta-primary">
                 Start for free
-              </a>
+              </button>
               <a href="#tutorial" className="hero-cta-secondary">
                 Watch tutorial
               </a>
@@ -183,13 +187,11 @@ export default function Home() {
               <h2>What is Visionize?</h2>
               <p>
                 Visionize is your all-in-one workspace for managing projects, organizing tasks,
-                and keeping your team connected. Whether you’re working solo or with a team,
+                and keeping your team connected. Whether you're working solo or with a team,
                 Visionize helps you transform ideas into action through a clear, intuitive,
                 and modern interface.
               </p>
-              <a href="/signin">
-                <button className="cta-btn">Get Started</button>
-              </a>
+              <button onClick={() => setShowSignUp(true)} className="cta-btn">Get Started</button>
             </div>
             <img src="/assets/images/3.jpg" alt="Visionize" />
           </div>
@@ -222,9 +224,7 @@ export default function Home() {
             <div className="intro-text">
               <h2>Start Your Journey Today</h2>
               <p>Join motivated teams who turned their vision into reality.</p>
-              <a href="/signin">
-                <button className="cta-btn">Get Started</button>
-              </a>
+              <button onClick={() => setShowSignUp(true)} className="cta-btn">Get Started</button>
             </div>
             <img src="/assets/images/4.jpg" alt="Visionize" />
           </div>
@@ -341,6 +341,12 @@ export default function Home() {
           </div>
         </footer>
       </main>
+
+      {/* === SIGNIN MODAL === */}
+      {showSignIn && <SignIn onClose={() => setShowSignIn(false)} onSwitchToSignUp={() => { setShowSignIn(false); setShowSignUp(true); }} />}
+
+      {/* === SIGNUP MODAL === */}
+      {showSignUp && <SignUp onClose={() => setShowSignUp(false)} onSwitchToSignIn={() => { setShowSignUp(false); setShowSignIn(true); }} />}
     </>
   );
 }
