@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./SignIn.css";
 
 const SignIn = ({ onClose, onSwitchToSignUp }) => {
+  const navigate = useNavigate();
+  const { signIn } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,6 +22,15 @@ const SignIn = ({ onClose, onSwitchToSignUp }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Sign in:", formData);
+    
+    // Store user data and update auth state
+    signIn({
+      email: formData.email,
+    });
+    
+    // Redirect to profile page
+    if (onClose) onClose();
+    navigate("/profile");
   };
 
   return (

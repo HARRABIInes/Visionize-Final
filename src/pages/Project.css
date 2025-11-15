@@ -1,0 +1,87 @@
+/* Hide labels outside of modals */
+label{display:none !important}
+.modal-inner label{display:block !important;margin-bottom:8px;position:static;top:auto}
+
+.project-page{max-width:1000px;margin:0 auto;padding:100px 16px 16px 16px;overflow-x:hidden}
+.project-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.project-controls{display:flex;gap:8px}
+.project-overview{display:flex;gap:16px;margin-bottom:18px}
+.progress{flex:2}
+.progress-bar{background:#eee;height:12px;border-radius:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#10b981,#3b82f6)}
+.progress-text{margin-top:6px}
+.members{flex:1;background:#fafafa;padding:12px;border-radius:8px}
+.members ul{padding-left:16px}
+.task-list{margin-top:20px}
+.task-list h3{margin:0 0 16px 0}
+.task-list ul{list-style:none;padding:0}
+.task-item{display:flex;justify-content:space-between;align-items:center;padding:14px;border:1px solid rgba(0,0,0,0.06);border-radius:10px;margin-bottom:12px;background:#fff}
+.task-left{max-width:65%}
+.task-right{display:flex;gap:10px;align-items:center}
+.task-menu-btn{background:none;border:none;font-size:1.5rem;cursor:pointer;color:#666;padding:4px 8px;border-radius:4px;transition:all 0.2s ease}
+.task-menu-btn:hover{background:#f0f0f0;color:#333}
+.task-meta{margin-top:8px;display:flex;gap:8px;align-items:center}
+.badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:0.85rem}
+.badge.priority{background:#f6f0e7;color:#7a5f3a;border:1px solid rgba(0,0,0,0.04)}
+.badge.priority.Critique, .badge.priority.Critique {background:#f4e1e1;color:#8a2b2b}
+.badge.date{background:transparent;color:#5b5b5b;border:1px solid rgba(0,0,0,0.04);padding:6px 8px;border-radius:8px}
+.badge.status{background:#fff;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:8px}
+
+.status-select{appearance:none;border:1px solid rgba(0,0,0,0.06);background:#fff;padding:8px 10px;border-radius:8px;cursor:pointer}
+.status-select:focus{outline:2px solid rgba(100,118,89,0.12)}
+
+.modal-inner h3{margin-top:0}
+
+/* === GANTT CHART === */
+.gantt-chart{margin-top:20px;padding:20px;background:#f9f9f9;border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,0.04)}
+.gantt-chart h4{margin:0 0 16px 0}
+.gantt-scroll{overflow-x:auto;padding-bottom:8px}
+.gantt-grid{--gantt-col-width:64px;min-width:600px;border:1px solid #e5e7eb;border-radius:10px;background:#fff;overflow:hidden}
+.gantt-header{display:flex;border-bottom:1px solid #e5e7eb;background:#f9fafb;position:static !important}
+.gantt-task-column{width:220px;padding:10px 14px;flex-shrink:0;position:static !important}
+.gantt-task-column.header{font-size:0.8rem;text-transform:uppercase;letter-spacing:0.04em;color:#6b7280;font-weight:600;position:static !important}
+.gantt-scale{flex:1;display:grid;align-items:center;position:relative}
+.gantt-scale-cell{border-left:1px solid #f0f0f0;padding:6px 0;text-align:center;font-size:0.75rem;color:#4b5563;background:#fff;min-height:44px;display:flex;flex-direction:column;justify-content:center}
+.gantt-scale-cell.weekend{background:#f8fafc;color:#94a3b8}
+.gantt-scale-day{font-weight:600}
+.gantt-scale-month{text-transform:uppercase;font-size:0.65rem;letter-spacing:0.05em}
+.gantt-body{display:flex;flex-direction:column}
+.gantt-row{display:flex;align-items:center;border-bottom:1px solid #f3f4f6;min-height:60px}
+.gantt-row:last-child{border-bottom:none}
+.gantt-task-name{font-weight:600;font-size:0.95rem}
+.gantt-task-meta{margin-top:4px;font-size:0.8rem;color:#6b7280;display:flex;gap:10px;flex-wrap:wrap}
+.gantt-task-owner{font-weight:500;color:#374151}
+.gantt-row .gantt-scale{border-left:1px solid #f0f0f0;padding:6px 0;min-height:42px}
+.gantt-bar{height:22px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.75rem;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,0.15);transition:transform 0.2s ease}
+.gantt-bar:hover{transform:translateY(-2px)}
+.gantt-legend{margin-top:16px;display:flex;gap:16px;flex-wrap:wrap}
+.gantt-legend-item{display:flex;align-items:center;gap:6px;font-size:0.85rem;color:#374151}
+.gantt-legend-color{width:14px;height:14px;border-radius:4px;display:inline-block}
+
+/* === KANBAN BOARD === */
+.kanban-board{margin-top:20px;padding:20px;background:#f9f9f9;border-radius:8px}
+.kanban-board h4{margin:0 0 20px 0}
+.kanban-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.kanban-column{background:#f0f0f0;border-radius:8px;padding:12px;min-height:400px}
+.kanban-column-title{font-weight:600;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #ddd;color:#333}
+.kanban-cards{display:flex;flex-direction:column;gap:10px}
+.kanban-card{background:#fff;border:1px solid #ddd;border-radius:6px;padding:12px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
+.kanban-card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+.kanban-card-title{font-weight:600;margin-bottom:6px}
+.kanban-card-desc{font-size:0.85rem;color:#666;margin-bottom:8px}
+.kanban-card-footer{display:flex;gap:8px;align-items:center}
+.kanban-card-progress{font-size:0.8rem;background:#e0e0e0;padding:2px 6px;border-radius:4px;color:#333}
+
+.diagram-placeholder{margin-top:10px;padding:12px;background:#fff;border:1px dashed #ddd}
+
+/* reuse modal/form styles similar to profile page */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-inner{background:#fff;padding:18px;border-radius:8px;max-width:680px;width:100%}
+.form label{display:block;margin-bottom:8px;position:static;top:auto}
+.form input,.form select,.form textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;margin-top:6px}
+.row{display:flex;gap:10px}
+.row label{position:static;top:auto}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+
+/* Ensure labels only display inside modals */
+label{position:static !important}

@@ -1,7 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./SignUp.css";
 
 function SignUp({ onClose, onSwitchToSignIn }) {
+  const navigate = useNavigate();
+  const { signUp } = useAuth();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -26,6 +30,19 @@ function SignUp({ onClose, onSwitchToSignIn }) {
     e.preventDefault();
     // Add validation logic here
     console.log("Form submitted:", formData);
+    
+    // Store user data and update auth state
+    signUp({
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      profession: formData.profession,
+      birthDate: formData.birthDate,
+    });
+    
+    // Redirect to profile page
+    if (onClose) onClose();
+    navigate("/profile");
   };
 
   return (

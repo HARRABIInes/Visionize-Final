@@ -1,276 +1,192 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "./Profile.css";
 
+const STORAGE_KEY = "visionize_projects";
+
+function loadProjects() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveProjects(projects) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+}
+
 export default function Profile() {
-  const [activeTab, setActiveTab] = useState("projects");
+  const [projects, setProjects] = useState(() => loadProjects());
+  const [showAdd, setShowAdd] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [form, setForm] = useState({
+    name: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+    methodology: "scrum",
+    members: "",
+  });
 
-  // Mock data - replace with real API calls later
-  const [userProjects] = useState([
-    {
-      id: 1,
-      name: "Website Redesign",
-      description: "Redesign the company website",
-      status: "In Progress",
-      progress: 65,
-      team: "Design Team",
-      dueDate: "2025-12-15",
-    },
-    {
-      id: 2,
-      name: "Mobile App Development",
-      description: "Build a new mobile application",
-      status: "Active",
-      progress: 40,
-      team: "Dev Team",
-      dueDate: "2026-01-30",
-    },
-    {
-      id: 3,
-      name: "Marketing Campaign",
-      description: "Q4 marketing campaign planning",
-      status: "Planning",
-      progress: 20,
-      team: "Marketing",
-      dueDate: "2025-11-30",
-    },
-  ]);
+  useEffect(() => {
+    saveProjects(projects);
+  }, [projects]);
 
-  const [userTasks] = useState([
-    {
-      id: 1,
-      title: "Create wireframes",
-      project: "Website Redesign",
-      status: "In Progress",
-      priority: "High",
-      dueDate: "2025-11-20",
-      assigned: "You",
-    },
-    {
-      id: 2,
-      title: "API Integration",
-      project: "Mobile App Development",
-      status: "To Do",
-      priority: "High",
-      dueDate: "2025-11-25",
-      assigned: "You",
-    },
-    {
-      id: 3,
-      title: "Brand guidelines review",
-      project: "Marketing Campaign",
-      status: "To Do",
-      priority: "Medium",
-      dueDate: "2025-11-22",
-      assigned: "You",
-    },
-    {
-      id: 4,
-      title: "Testing & QA",
-      project: "Website Redesign",
-      status: "Done",
-      priority: "Medium",
-      dueDate: "2025-11-18",
-      assigned: "You",
-    },
-  ]);
+  const counts = {
+    activeProjects: projects.filter((p) => p.active !== false).length,
+    upcomingTasks: projects.reduce((acc, p) => acc + (p.tasks?.filter(t => !t.done).length || 0), 0),
+    teams: new Set(projects.flatMap(p => p.members || [])).size,
+  };
 
-  const [userTeams] = useState([
-    {
-      id: 1,
-      name: "Design Team",
-      description: "UI/UX Design Team",
-      members: 5,
-      role: "Lead",
-      projects: 3,
-    },
-    {
-      id: 2,
-      name: "Dev Team",
-      description: "Full Stack Development",
-      members: 8,
-      role: "Member",
-      projects: 4,
-    },
-    {
-      id: 3,
-      name: "Marketing",
-      description: "Marketing & Growth",
-      members: 4,
-      role: "Member",
-      projects: 2,
-    },
-  ]);
+  // compute overall advancement percentage across all tasks
+  const allTasks = projects.flatMap(p => p.tasks || []);
+  const advancementPercent = (() => {
+    if (!allTasks || allTasks.length === 0) return 0;
+    const total = allTasks.reduce((acc, t) => {
+      if (typeof t.progress === 'number') return acc + Math.max(0, Math.min(100, t.progress));
+      if (t.done) return acc + 100;
+      return acc + 0;
+    }, 0);
+    return Math.round(total / allTasks.length);
+  })();
+
+  function handleOpenAdd() {
+    setForm({ name: "", description: "", startDate: "", endDate: "", methodology: "scrum", members: "" });
+    setShowAdd(true);
+  }
+
+  function handleSubmitAdd(e) {
+    e.preventDefault();
+    const members = form.members
+      .split(",")
+      .map(s => s.trim())
+      .filter(Boolean);
+    const newProject = {
+      id: Date.now().toString(),
+      name: form.name || "Untitled",
+      description: form.description || "",
+      startDate: form.startDate || null,
+      endDate: form.endDate || null,
+      methodology: form.methodology,
+      members,
+      tasks: [],
+      active: true,
+    };
+    setProjects(prev => [newProject, ...prev]);
+    setShowAdd(false);
+  }
 
   return (
     <div className="profile-container">
-      {/* === PROFILE HEADER === */}
-      <div className="profile-header">
-        <div className="profile-avatar">
-          <img src="/assets/images/logo.png" alt="Profile Avatar" />
+      <div className="profile-inner">
+        <header className="profile-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p>Bienvenue {user?.firstName ? `, ${user.firstName}` : ""} — voici un aperçu rapide de vos projets</p>
+          </div>
+          <div className="header-buttons">
+            <button className="btn primary" onClick={handleOpenAdd}>Ajouter un projet</button>
+          </div>
+        </header>
+
+        <section className="profile-stats stats-row">
+          <div className="stat">
+            <div className="stat-value">{counts.activeProjects}</div>
+            <div className="stat-label">Projets actifs</div>
+          </div>
+          <div className="stat">
+            <div className="stat-value">{counts.upcomingTasks}</div>
+            <div className="stat-label">Tâches à venir</div>
+          </div>
+          <div className="stat">
+            <div className="stat-value">{counts.teams}</div>
+            <div className="stat-label">Équipes</div>
+          </div>
+          <div className="stat">
+            <div className="stat-value">{advancementPercent}%</div>
+            <div className="stat-label">Progression globale</div>
+          </div>
+        </section>
+
+        <div className="main-grid">
+          <main className="projects-column">
+            <h2 className="section-title">Vos projets</h2>
+            <section className="project-list">
+              {projects.length === 0 && <p className="muted">Pas encore de projets. Ajoutez-en un !</p>}
+              {projects.map((p) => (
+                <article key={p.id} className="project-card" onClick={() => navigate(`/project/${p.id}`)}>
+                  <h3>{p.name}</h3>
+                  <p className="muted small">{p.description}</p>
+                  <div className="meta">
+                    <span>{p.methodology}</span>
+                    <span>{p.members?.length || 0} membres</span>
+                    <span>{p.tasks?.length || 0} tâches</span>
+                  </div>
+                </article>
+              ))}
+            </section>
+          </main>
+
+          <aside className="sidebar">
+            <h3>Tâches à venir</h3>
+            <ul className="upcoming-list">
+              {projects.flatMap(p => p.tasks || []).slice(0,5).map(t => (
+                <li key={t.id} className="upcoming-item">{t.name || 'Tâche sans titre'}</li>
+              ))}
+              {projects.flatMap(p => p.tasks || []).length === 0 && <li className="muted">Pas de tâches à venir</li>}
+            </ul>
+          </aside>
         </div>
-        <div className="profile-info">
-          <h1>John Doe</h1>
-          <p className="profile-email">john.doe@visionize.com</p>
-          <p className="profile-bio">Project Manager | Full Stack Developer</p>
-        </div>
-        <button className="profile-edit-btn">Edit Profile</button>
       </div>
 
-      {/* === STATS OVERVIEW === */}
-      <div className="profile-stats">
-        <div className="stat-card">
-          <div className="stat-icon">📊</div>
-          <div className="stat-content">
-            <span className="stat-value">{userProjects.length}</span>
-            <span className="stat-label">Active Projects</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">✓</div>
-          <div className="stat-content">
-            <span className="stat-value">
-              {userTasks.filter((t) => t.status === "Done").length}
-            </span>
-            <span className="stat-label">Completed Tasks</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">👥</div>
-          <div className="stat-content">
-            <span className="stat-value">{userTeams.length}</span>
-            <span className="stat-label">Teams</span>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon">⏳</div>
-          <div className="stat-content">
-            <span className="stat-value">
-              {userTasks.filter((t) => t.status === "In Progress").length}
-            </span>
-            <span className="stat-label">In Progress</span>
-          </div>
-        </div>
-      </div>
-
-      {/* === TABS === */}
-      <div className="profile-tabs">
-        <button
-          className={`tab-btn ${activeTab === "projects" ? "active" : ""}`}
-          onClick={() => setActiveTab("projects")}
-        >
-          Projects
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "tasks" ? "active" : ""}`}
-          onClick={() => setActiveTab("tasks")}
-        >
-          Tasks
-        </button>
-        <button
-          className={`tab-btn ${activeTab === "teams" ? "active" : ""}`}
-          onClick={() => setActiveTab("teams")}
-        >
-          Teams
-        </button>
-      </div>
-
-      {/* === PROJECTS TAB === */}
-      {activeTab === "projects" && (
-        <div className="tab-content projects-content">
-          <div className="content-header">
-            <h2>Your Projects</h2>
-            <button className="btn-primary">+ New Project</button>
-          </div>
-          <div className="projects-grid">
-            {userProjects.map((project) => (
-              <div key={project.id} className="project-card">
-                <div className="project-card-header">
-                  <h3>{project.name}</h3>
-                  <span className={`status-badge status-${project.status.toLowerCase().replace(" ", "-")}`}>
-                    {project.status}
-                  </span>
-                </div>
-                <p className="project-description">{project.description}</p>
-                <div className="project-progress">
-                  <div className="progress-bar">
-                    <div className="progress-fill" style={{ width: `${project.progress}%` }}></div>
-                  </div>
-                  <span className="progress-text">{project.progress}%</span>
-                </div>
-                <div className="project-meta">
-                  <span className="meta-item">👥 {project.team}</span>
-                  <span className="meta-item">📅 {project.dueDate}</span>
-                </div>
+      {showAdd && (
+        <div className="modal" onClick={() => setShowAdd(false)}>
+          <div className="modal-inner" onClick={e=>e.stopPropagation()}>
+            <h2>Nouveau projet</h2>
+            <form onSubmit={handleSubmitAdd} className="form">
+              <label>
+                Nom
+                <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
+              </label>
+              <label>
+                Description
+                <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
+              </label>
+              <div className="row">
+                <label>
+                  Début
+                  <input type="date" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} />
+                </label>
+                <label>
+                  Fin
+                  <input type="date" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} />
+                </label>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+              <label>
+                Méthodologie
+                <select value={form.methodology} onChange={e => setForm(f => ({ ...f, methodology: e.target.value }))}>
+                  <option value="waterfall">Cascade</option>
+                  <option value="scrum">Scrum</option>
+                  <option value="kanban">Kanban</option>
+                </select>
+              </label>
+              <label>
+                Membres (emails séparés par des virgules)
+                <input value={form.members} onChange={e => setForm(f => ({ ...f, members: e.target.value }))} placeholder="a@x.com, b@y.com" />
+              </label>
 
-      {/* === TASKS TAB === */}
-      {activeTab === "tasks" && (
-        <div className="tab-content tasks-content">
-          <div className="content-header">
-            <h2>Your Tasks</h2>
-            <button className="btn-primary">+ New Task</button>
-          </div>
-          <div className="tasks-list">
-            {userTasks.map((task) => (
-              <div key={task.id} className="task-item">
-                <div className="task-checkbox">
-                  <input type="checkbox" id={`task-${task.id}`} />
-                  <label htmlFor={`task-${task.id}`}></label>
-                </div>
-                <div className="task-info">
-                  <h4>{task.title}</h4>
-                  <p className="task-project">{task.project}</p>
-                </div>
-                <div className="task-meta">
-                  <span className={`priority-badge priority-${task.priority.toLowerCase()}`}>
-                    {task.priority}
-                  </span>
-                  <span className={`task-status status-${task.status.toLowerCase().replace(" ", "-")}`}>
-                    {task.status}
-                  </span>
-                  <span className="task-due">📅 {task.dueDate}</span>
-                </div>
+              <div className="actions">
+                <button type="button" className="btn" onClick={() => setShowAdd(false)}>Annuler</button>
+                <button type="submit" className="btn primary">Créer</button>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* === TEAMS TAB === */}
-      {activeTab === "teams" && (
-        <div className="tab-content teams-content">
-          <div className="content-header">
-            <h2>Your Teams</h2>
-            <button className="btn-primary">+ Create Team</button>
-          </div>
-          <div className="teams-grid">
-            {userTeams.map((team) => (
-              <div key={team.id} className="team-card">
-                <div className="team-header">
-                  <h3>{team.name}</h3>
-                  <span className="role-badge">{team.role}</span>
-                </div>
-                <p className="team-description">{team.description}</p>
-                <div className="team-stats">
-                  <div className="team-stat">
-                    <span className="stat-value">{team.members}</span>
-                    <span className="stat-label">Members</span>
-                  </div>
-                  <div className="team-stat">
-                    <span className="stat-value">{team.projects}</span>
-                    <span className="stat-label">Projects</span>
-                  </div>
-                </div>
-                <button className="team-action-btn">View Team</button>
-              </div>
-            ))}
+            </form>
           </div>
         </div>
       )}
     </div>
   );
 }
+

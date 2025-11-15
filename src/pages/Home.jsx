@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import "./Home.css";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
 export default function Home() {
+  const location = useLocation();
   const [selectedTool, setSelectedTool] = useState(null);
   const [showSignIn, setShowSignIn] = useState(false);
   const [showSignUp, setShowSignUp] = useState(false);
@@ -32,6 +34,18 @@ export default function Home() {
       "Get instant insights into project performance, task completion, and workload distribution — all in one place."
   };
 
+  // Scroll to section if specified in navigation state
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const section = document.getElementById(location.state.scrollTo);
+      if (section) {
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+  }, [location]);
+
   // Scroll reveal on sections
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,12 +69,12 @@ export default function Home() {
   // Navbar + background blobs parallax
   useEffect(() => {
     const handleScroll = () => {
-      const navbar = document.querySelector(".navbar");
-      if (navbar) {
+      const header = document.querySelector(".header");
+      if (header) {
         if (window.scrollY > 20) {
-          navbar.classList.add("scrolled");
+          header.classList.add("scrolled");
         } else {
-          navbar.classList.remove("scrolled");
+          header.classList.remove("scrolled");
         }
       }
 
@@ -78,30 +92,6 @@ export default function Home() {
 
   return (
     <>
-      {/* === NAVBAR === */}
-      <header className="navbar">
-        <div className="navbar-left">
-          <div className="navbar-logo">Visionize</div>
-          <a href="logo.png" className="navbar-logo-image">
-            <img src="/assets/images/logo.png" alt="Visionize Logo" />
-          </a>
-        </div>
-        <nav className="navbar-links">
-          <a href="#top">Home</a>
-          <a href="#discover">Discover</a>
-          <a href="#tools">Tools</a>
-          <a href="#tutorial">Tutorial</a>
-        </nav>
-        <div className="navbar-actions">
-          <button onClick={() => setShowSignIn(true)} className="navbar-ghost">
-            Log in
-          </button>
-          <button onClick={() => setShowSignUp(true)} className="navbar-cta">
-            Get Started
-          </button>
-        </div>
-      </header>
-
       <main>
         {/* === HERO SECTION === */}
         <section id="top" className="hero reveal-on-scroll">
