@@ -155,6 +155,8 @@
   font-size: 0.95rem;
   font-family: inherit;
   background-color: #f9f9f9;
+  color: var(--text-main);
+  caret-color: var(--text-main);
   transition: all 0.2s ease;
 }
 
@@ -166,7 +168,8 @@
 }
 
 .form-group input::placeholder {
-  color: #ccc;
+  color: #9b9b9b;
+  opacity: 1;
 }
 
 /* === REMEMBER & FORGOT === */
