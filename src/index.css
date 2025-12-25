@@ -1,16 +1,49 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  
+  /* Light mode colors */
+  --bg-primary: #EFEBE4;
+  --bg-secondary: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --accent: #5c6c56;
+  --border: #ddd;
+  
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2a2a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --accent: #8fa87f;
+    --border: #444444;
+    
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+  }
+}
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 a {
@@ -28,6 +61,13 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
 }
 
 h1 {
@@ -42,27 +82,58 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #f9f9f9;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
+  color: var(--text-primary);
 }
+
+@media (prefers-color-scheme: light) {
+  button {
+    background-color: #f9f9f9;
+    color: #333;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  button {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    border-color: #444;
+  }
+}
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
+/* Responsive text sizing */
+@media (max-width: 768px) {
   :root {
-    color: #213547;
-    background-color: #EFEBE4;
+    font-size: 14px;
   }
-  a:hover {
-    color: #747bff;
+  
+  h1 {
+    font-size: 2.2em;
   }
-  button {
-    background-color: #f9f9f9;
+  
+  h2 {
+    font-size: 1.8em;
   }
 }
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 12px;
+  }
+  
+  h1 {
+    font-size: 1.8em;
+  }
+}
+
