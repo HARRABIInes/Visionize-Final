@@ -556,6 +556,89 @@ html, body, #root {
   animation: fadeInUp 0.6s ease-out;
 }
 
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.card-header > div {
+  flex: 1;
+}
+
+.project-card h3 {
+  margin: 0 0 0.5rem 0;
+}
+
+.project-card .muted.small {
+  margin: 0.25rem 0;
+}
+
+.btn-delete {
+  background: #F5D4D4;
+  border: 1px solid #E8C1C1;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete:hover {
+  background: #EDAFAF;
+  border-color: #D4A0A0;
+  transform: scale(1.1);
+}
+
+.btn-card-delete {
+  background: linear-gradient(135deg, rgba(240, 216, 184, 0.6), rgba(212, 197, 185, 0.4));
+  border: 2px solid #D4C5B9;
+  color: #8B7355;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-card-delete::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(212, 197, 185, 0.3);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.btn-card-delete:hover {
+  background: linear-gradient(135deg, rgba(212, 197, 185, 0.8), rgba(200, 180, 160, 0.6));
+  border-color: #A0917E;
+  color: #6B5944;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(100, 120, 89, 0.15);
+}
+
+.btn-card-delete:hover::before {
+  left: 0;
+}
+
 .project-card::before {
   content: '';
   position: absolute;

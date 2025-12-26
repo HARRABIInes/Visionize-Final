@@ -143,9 +143,11 @@
 }
 
 .form-group label {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #3b4134;
+  color: #2c3e2f;
+  display: block;
+  margin-bottom: 6px;
 }
 
 .form-group input {

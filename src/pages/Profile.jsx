@@ -1,82 +1,93 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { listProjects, createProject, deleteProject } from "../services/projects";
+import { listTasks } from "../services/tasks";
 import "./Profile.css";
 
-const STORAGE_KEY = "visionize_projects";
-
-function loadProjects() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  } catch {
-    return [];
-  }
-}
-
-function saveProjects(projects) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-}
-
 export default function Profile() {
-  const [projects, setProjects] = useState(() => loadProjects());
+  const [projects, setProjects] = useState([]);
+  const [tasksByProject, setTasksByProject] = useState({});
+  const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { user } = useAuth();
   const [form, setForm] = useState({
     name: "",
     description: "",
-    startDate: "",
-    endDate: "",
-    methodology: "scrum",
-    members: "",
+    managementMethod: "Kanban",
   });
 
   useEffect(() => {
-    saveProjects(projects);
-  }, [projects]);
+    const load = async () => {
+      try {
+        setError(null);
+        const data = await listProjects();
+        setProjects(data);
+        // Fetch tasks for each project to display counts
+        const entries = await Promise.all(
+          data.map(async (p) => {
+            const tasks = await listTasks(p._id);
+            return [p._id, tasks];
+          })
+        );
+        setTasksByProject(Object.fromEntries(entries));
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, []);
 
   const counts = {
-    activeProjects: projects.filter((p) => p.active !== false).length,
-    upcomingTasks: projects.reduce((acc, p) => acc + (p.tasks?.filter(t => !t.done).length || 0), 0),
+    activeProjects: projects.length,
+    upcomingTasks: Object.values(tasksByProject).flat().filter(t => t.status !== "Terminé").length,
     teams: new Set(projects.flatMap(p => p.members || [])).size,
   };
 
-  // compute overall advancement percentage across all tasks
-  const allTasks = projects.flatMap(p => p.tasks || []);
+  const allTasks = Object.values(tasksByProject).flat();
   const advancementPercent = (() => {
     if (!allTasks || allTasks.length === 0) return 0;
     const total = allTasks.reduce((acc, t) => {
-      if (typeof t.progress === 'number') return acc + Math.max(0, Math.min(100, t.progress));
-      if (t.done) return acc + 100;
+      if (typeof t.progress === "number") return acc + Math.max(0, Math.min(100, t.progress));
       return acc + 0;
     }, 0);
     return Math.round(total / allTasks.length);
   })();
 
   function handleOpenAdd() {
-    setForm({ name: "", description: "", startDate: "", endDate: "", methodology: "scrum", members: "" });
+    setForm({ name: "", description: "", managementMethod: "Kanban" });
     setShowAdd(true);
   }
 
-  function handleSubmitAdd(e) {
+  async function handleSubmitAdd(e) {
     e.preventDefault();
-    const members = form.members
-      .split(",")
-      .map(s => s.trim())
-      .filter(Boolean);
-    const newProject = {
-      id: Date.now().toString(),
-      name: form.name || "Untitled",
-      description: form.description || "",
-      startDate: form.startDate || null,
-      endDate: form.endDate || null,
-      methodology: form.methodology,
-      members,
-      tasks: [],
-      active: true,
-    };
-    setProjects(prev => [newProject, ...prev]);
-    setShowAdd(false);
+    try {
+      setError(null);
+      console.log('[Profile] creating project with managementMethod:', form.managementMethod);
+      const created = await createProject({ title: form.name, description: form.description, managementMethod: form.managementMethod });
+      console.log('[Profile] created project:', created);
+      setProjects(prev => [created, ...prev]);
+      setShowAdd(false);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  async function handleDeleteProject(projectId, e) {
+    e.stopPropagation();
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce projet?")) {
+      try {
+        setError(null);
+        await deleteProject(projectId);
+        setProjects(prev => prev.filter(p => p._id !== projectId));
+      } catch (err) {
+        setError(err.message);
+      }
+    }
   }
 
   return (
@@ -91,6 +102,9 @@ export default function Profile() {
             <button className="btn primary" onClick={handleOpenAdd}>Ajouter un projet</button>
           </div>
         </header>
+
+        {error && <p className="muted" style={{ color: "red" }}>{error}</p>}
+        {loading && <p className="muted">Chargement...</p>}
 
         <section className="profile-stats stats-row">
           <div className="stat">
@@ -117,13 +131,24 @@ export default function Profile() {
             <section className="project-list">
               {projects.length === 0 && <p className="muted">Pas encore de projets. Ajoutez-en un !</p>}
               {projects.map((p) => (
-                <article key={p.id} className="project-card" onClick={() => navigate(`/project/${p.id}`)}>
-                  <h3>{p.name}</h3>
-                  <p className="muted small">{p.description}</p>
+                <article key={p._id} className="project-card" onClick={() => navigate(`/project/${p._id}`)}>
+                  <div className="card-header">
+                    <div>
+                      <h3>{p.title}</h3>
+                      <p className="muted small">{p.description}</p>
+                      <p className="muted small">Méthode: <strong>{p.managementMethod || 'Kanban'}</strong></p>
+                    </div>
+                    <button 
+                      className="btn-card-delete"
+                      onClick={(e) => handleDeleteProject(p._id, e)}
+                      title="Supprimer le projet"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
                   <div className="meta">
-                    <span>{p.methodology}</span>
                     <span>{p.members?.length || 0} membres</span>
-                    <span>{p.tasks?.length || 0} tâches</span>
+                    <span>{(tasksByProject[p._id] || []).length} tâches</span>
                   </div>
                 </article>
               ))}
@@ -133,10 +158,10 @@ export default function Profile() {
           <aside className="sidebar">
             <h3>Tâches à venir</h3>
             <ul className="upcoming-list">
-              {projects.flatMap(p => p.tasks || []).slice(0,5).map(t => (
-                <li key={t.id} className="upcoming-item">{t.name || 'Tâche sans titre'}</li>
+              {Object.values(tasksByProject).flat().slice(0,5).map(t => (
+                <li key={t._id} className="upcoming-item">{t.title || 'Tâche sans titre'}</li>
               ))}
-              {projects.flatMap(p => p.tasks || []).length === 0 && <li className="muted">Pas de tâches à venir</li>}
+              {Object.values(tasksByProject).flat().length === 0 && <li className="muted">Pas de tâches à venir</li>}
             </ul>
           </aside>
         </div>
@@ -155,27 +180,13 @@ export default function Profile() {
                 Description
                 <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
               </label>
-              <div className="row">
-                <label>
-                  Début
-                  <input type="date" value={form.startDate} onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} />
-                </label>
-                <label>
-                  Fin
-                  <input type="date" value={form.endDate} onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} />
-                </label>
-              </div>
               <label>
-                Méthodologie
-                <select value={form.methodology} onChange={e => setForm(f => ({ ...f, methodology: e.target.value }))}>
-                  <option value="waterfall">Cascade</option>
-                  <option value="scrum">Scrum</option>
-                  <option value="kanban">Kanban</option>
+                Méthode de gestion
+                <select value={form.managementMethod} onChange={e => setForm(f => ({ ...f, managementMethod: e.target.value }))}>
+                  <option value="Kanban">Kanban</option>
+                  <option value="Scrum">Scrum</option>
+                  <option value="Waterfall">Waterfall</option>
                 </select>
-              </label>
-              <label>
-                Membres (emails séparés par des virgules)
-                <input value={form.members} onChange={e => setForm(f => ({ ...f, members: e.target.value }))} placeholder="a@x.com, b@y.com" />
               </label>
 
               <div className="actions">

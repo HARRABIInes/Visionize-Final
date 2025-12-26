@@ -26,23 +26,22 @@ function SignUp({ onClose, onSwitchToSignIn }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add validation logic here
-    console.log("Form submitted:", formData);
-    
-    // Store user data and update auth state
-    signUp({
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      profession: formData.profession,
-      birthDate: formData.birthDate,
-    });
-    
-    // Redirect to profile page
-    if (onClose) onClose();
-    navigate("/profile");
+    try {
+      await signUp({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        profession: formData.profession,
+        birthDate: formData.birthDate,
+        password: formData.password,
+      });
+      if (onClose) onClose();
+      navigate("/profile");
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
@@ -53,7 +52,7 @@ function SignUp({ onClose, onSwitchToSignIn }) {
         <div className="modal-content">
           <div className="modal-header">
             <h2>Create Your Account</h2>
-            <p>Join thousands of teams already managing projects with Visionize</p>
+            <p>Join thousands of teams already managing projects with Visionise</p>
           </div>
 
           <form className="signup-form" onSubmit={handleSubmit}>

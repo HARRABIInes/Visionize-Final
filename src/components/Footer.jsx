@@ -6,16 +6,16 @@ export default function Footer() {
     <footer className="footer">
       <section className="contact">
         <a href="mailto:visionize@supcom.tn">
-          <img src="src/assets/images/mailicon.svg" alt="Mail" />Mail
+          <img src="/src/assets/images/mailicon.svg" alt="Mail" />Mail
         </a>
         <a href="https://www.facebook.com/mostfa.rekik" target="blank">
-          <img src="src/assets/images/fb.png" alt="Facebook" />Facebook
+          <img src="/src/assets/images/fb.png" alt="Facebook" />Facebook
         </a>
         <a href="https://www.instagram.com/mostfa__rekik/" target="blank">
-          <img src="src/assets/images/instagramicon.webp" alt="Instagram" />Instagram
+          <img src="/src/assets/images/instagramicon.webp" alt="Instagram" />Instagram
         </a>
         <a href="https://www.linkedin.com/in/ines-harrabi-860329331/" target="blank">
-          <img src="src/assets/images/linkedin.png" alt="LinkedIn" />LinkedIn
+          <img src="/src/assets/images/linkedin.png" alt="LinkedIn" />LinkedIn
         </a>
         <p>© 2025 Visionize. All rights reserved.</p>
       </section>

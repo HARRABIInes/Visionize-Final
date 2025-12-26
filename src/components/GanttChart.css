@@ -1,0 +1,212 @@
+.gantt-chart {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(100, 120, 89, 0.12);
+  border: 1px solid rgba(212, 197, 185, 0.3);
+}
+
+.gantt-chart h3 {
+  margin-bottom: 1.5rem;
+  color: #647859;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.gantt-container {
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+.gantt-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #647859;
+}
+
+.task-name-header {
+  min-width: 150px;
+  font-weight: 600;
+  color: #647859;
+  font-size: 0.9rem;
+}
+
+.gantt-timeline-header {
+  flex: 1;
+  position: relative;
+  height: 40px;
+  min-width: 400px;
+}
+
+.timeline-date {
+  position: absolute;
+  font-size: 0.75rem;
+  color: #647859;
+  font-weight: 500;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.gantt-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gantt-task-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 45px;
+}
+
+.task-name {
+  min-width: 150px;
+  max-width: 150px;
+  font-weight: 500;
+  color: #4a5947;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.85rem;
+  padding: 0.25rem;
+}
+
+.task-bar-container {
+  flex: 1;
+  position: relative;
+  background: #F5F0E8;
+  border-radius: 6px;
+  height: 40px;
+  min-width: 400px;
+  border: 1px solid #E0D7CC;
+}
+
+.grid-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #E8DFD5;
+  pointer-events: none;
+}
+
+.task-bar {
+  position: absolute;
+  height: 32px;
+  top: 4px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  min-width: 40px;
+}
+
+.task-bar-text {
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  padding: 0 8px;
+  font-weight: 700;
+}
+
+.task-bar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* Status colors - Pastel palette */
+.task-bar.not-started,
+.task-bar.non-demarré,
+.task-bar.non-démarré {
+  background: linear-gradient(135deg, #D4C5B9 0%, #C9B5A8 100%);
+  color: #5a4f47;
+}
+
+.task-bar.in-progress,
+.task-bar.en-cours {
+  background: linear-gradient(135deg, #C9E9D4 0%, #B5DEC5 100%);
+  color: #3d6647;
+}
+
+.task-bar.completed,
+.task-bar.terminé {
+  background: linear-gradient(135deg, #D4DFF5 0%, #C1D8F0 100%);
+  color: #3d5273;
+}
+
+.task-bar.cancelled,
+.task-bar.annulé {
+  background: linear-gradient(135deg, #F5D4D4 0%, #F0C1C1 100%);
+  color: #734545;
+}
+
+.task-bar.reported,
+.task-bar.signalé {
+  background: linear-gradient(135deg, #F5E6D4 0%, #F0DCC1 100%);
+  color: #735a3d;
+}
+
+/* Legend */
+.gantt-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #E8DFD5;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #647859;
+}
+
+.legend-color {
+  width: 24px;
+  height: 16px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.legend-color.not-started,
+.legend-color.non-demarré,
+.legend-color.non-démarré {
+  background: linear-gradient(135deg, #D4C5B9 0%, #C9B5A8 100%);
+}
+
+.legend-color.in-progress,
+.legend-color.en-cours {
+  background: linear-gradient(135deg, #C9E9D4 0%, #B5DEC5 100%);
+}
+
+.legend-color.completed,
+.legend-color.terminé {
+  background: linear-gradient(135deg, #D4DFF5 0%, #C1D8F0 100%);
+}
+
+.legend-color.cancelled,
+.legend-color.annulé {
+  background: linear-gradient(135deg, #F5D4D4 0%, #F0C1C1 100%);
+}
+
+.gantt-empty {
+  padding: 2rem;
+  text-align: center;
+  color: #A0917E;
+  background: #F9F6F2;
+  border-radius: 8px;
+  border: 1px solid #E8DFD5;
+  font-size: 0.95rem;
+}

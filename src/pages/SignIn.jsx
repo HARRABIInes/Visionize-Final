@@ -19,18 +19,18 @@ const SignIn = ({ onClose, onSwitchToSignUp }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sign in:", formData);
-    
-    // Store user data and update auth state
-    signIn({
-      email: formData.email,
-    });
-    
-    // Redirect to profile page
-    if (onClose) onClose();
-    navigate("/profile");
+    try {
+      await signIn({
+        email: formData.email,
+        password: formData.password,
+      });
+      if (onClose) onClose();
+      navigate("/profile");
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   return (
@@ -41,12 +41,12 @@ const SignIn = ({ onClose, onSwitchToSignUp }) => {
         <div className="modal-content">
           <div className="modal-header">
             <h2>Welcome Back</h2>
-            <p>Sign in to your Visionize account</p>
+            <p>Sign in to your Visionise account</p>
           </div>
 
           <form className="signin-form" onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Email Address</label>
+              <label htmlFor="email">Email Address</label>
               <input
                 type="email"
                 name="email"
@@ -58,7 +58,7 @@ const SignIn = ({ onClose, onSwitchToSignUp }) => {
             </div>
 
             <div className="form-group">
-              <label>Password</label>
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 name="password"

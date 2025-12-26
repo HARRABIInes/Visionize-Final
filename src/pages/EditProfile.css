@@ -59,6 +59,7 @@
   color: #2c3e2f;
   margin-bottom: 8px;
   font-size: 0.95rem;
+  display: block;
 }
 
 .form-group input {

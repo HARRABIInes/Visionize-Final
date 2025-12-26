@@ -37,7 +37,7 @@ export default function Header() {
       <header className="header">
         <div className="logo-container">
           <Link to="/">
-          <img src="src/assets/images/logo.png" width="200" alt="Visionize logo" />
+          <img src="/src/assets/images/logo.png" width="200" alt="Visionize logo" />
           </Link>
           <h1 className="site-title">Visionize</h1>
          

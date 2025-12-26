@@ -1,0 +1,210 @@
+.kanban-board {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(100, 120, 89, 0.12);
+  border: 1px solid rgba(212, 197, 185, 0.3);
+}
+
+.kanban-board h3 {
+  margin-bottom: 1.5rem;
+  color: #647859;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.kanban-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.kanban-column {
+  background: #F9F6F2;
+  border-radius: 10px;
+  padding: 1rem;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #E8DFD5;
+}
+
+.column-header {
+  font-weight: 600;
+  color: #647859;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  padding: 0.75rem;
+  border-bottom: 2px solid #D4C5B9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.column-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 300px;
+}
+
+.kanban-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #D4C5B9;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: grab;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 6px rgba(100, 120, 89, 0.08);
+}
+
+.kanban-card:hover {
+  box-shadow: 0 6px 16px rgba(100, 120, 89, 0.15);
+  transform: translateY(-4px);
+  border-color: #A0917E;
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+  opacity: 0.8;
+}
+
+.kanban-card.faible {
+  border-left: 4px solid #B5DEC5;
+}
+
+.kanban-card.normal {
+  border-left: 4px solid #C9E9D4;
+}
+
+.kanban-card.haute {
+  border-left: 4px solid #F0D8B8;
+}
+
+.kanban-card.critique {
+  border-left: 4px solid #F5D4D4;
+}
+
+.kanban-card h4 {
+  margin: 0;
+  color: #647859;
+  font-size: 0.95rem;
+  font-weight: 600;
+  flex: 1;
+  word-break: break-word;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 0.75rem;
+}
+
+.priority {
+  font-size: 0.7rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+  text-transform: capitalize;
+}
+
+.priority.low {
+  background: #D4DFF5;
+  color: #647859;
+}
+
+.priority.normal {
+  background: #C9E9D4;
+  color: #647859;
+}
+
+.priority.high {
+  background: #F0D8B8;
+  color: #8B7D73;
+}
+
+.priority.critical {
+  background: #F5D4D4;
+  color: #8B6B6B;
+}
+
+.kanban-card .description {
+  color: #8B7D73;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  max-height: 60px;
+  overflow: hidden;
+}
+
+.card-dates {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.card-dates .date {
+  color: #8B7D73;
+  font-size: 0.75rem;
+  background: #F5F0E8;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.task-info {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+}
+
+.task-info .assignee,
+.task-info .type {
+  color: #8B7D73;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.task-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #E8DFD5;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #E8DFD5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #B5DEC5, #C9E9D4);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  color: #647859;
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 35px;
+  text-align: right;
+}

@@ -36,7 +36,7 @@ export default function EditProfile() {
       birthDate: formData.birthDate,
     });
 
-    setSuccessMessage("Profil mis à jour avec succès!");
+    setSuccessMessage("Profile updated successfully!");
     setTimeout(() => {
       setSuccessMessage("");
       navigate("/profile");
@@ -46,8 +46,8 @@ export default function EditProfile() {
   return (
     <div className="edit-profile-container">
       <div className="edit-profile-inner">
-        <h1>Modifier votre profil</h1>
-        <p className="subtitle">Mettez à jour vos informations personnelles</p>
+        <h1>Edit Your Profile</h1>
+        <p className="subtitle">Update your personal information</p>
 
         {successMessage && (
           <div className="success-message">
@@ -58,24 +58,24 @@ export default function EditProfile() {
         <form className="edit-profile-form" onSubmit={handleSubmit}>
           <div className="form-row">
             <div className="form-group">
-              <label>Prénom</label>
+              <label>First Name</label>
               <input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                placeholder="Votre prénom"
+                placeholder="Your first name"
                 required
               />
             </div>
             <div className="form-group">
-              <label>Nom</label>
+              <label>Last Name</label>
               <input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                placeholder="Votre nom"
+                placeholder="Your last name"
                 required
               />
             </div>
@@ -88,7 +88,7 @@ export default function EditProfile() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="votre@email.com"
+              placeholder="your@email.com"
               required
             />
           </div>
@@ -100,13 +100,13 @@ export default function EditProfile() {
               name="profession"
               value={formData.profession}
               onChange={handleChange}
-              placeholder="Votre profession"
+              placeholder="Your profession"
               required
             />
           </div>
 
           <div className="form-group">
-            <label>Date de naissance</label>
+            <label>Birth Date</label>
             <input
               type="date"
               name="birthDate"
@@ -121,10 +121,10 @@ export default function EditProfile() {
               className="btn btn-secondary"
               onClick={() => navigate("/profile")}
             >
-              Annuler
+              Cancel
             </button>
             <button type="submit" className="btn btn-primary">
-              Enregistrer les modifications
+              Save Changes
             </button>
           </div>
         </form>
