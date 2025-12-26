@@ -17,6 +17,8 @@ export default function Profile() {
     name: "",
     description: "",
     managementMethod: "Kanban",
+    startDate: "",
+    endDate: "",
   });
 
   useEffect(() => {
@@ -44,7 +46,11 @@ export default function Profile() {
 
   const counts = {
     activeProjects: projects.length,
-    upcomingTasks: Object.values(tasksByProject).flat().filter(t => t.status !== "Terminé").length,
+    // Accept both English and French 'Completed' statuses to be robust
+    upcomingTasks: Object.values(tasksByProject)
+      .flat()
+      .filter(t => t.status !== "Completed" && t.status !== "Terminé")
+      .length,
     teams: new Set(projects.flatMap(p => p.members || [])).size,
   };
 
@@ -59,7 +65,7 @@ export default function Profile() {
   })();
 
   function handleOpenAdd() {
-    setForm({ name: "", description: "", managementMethod: "Kanban" });
+    setForm({ name: "", description: "", managementMethod: "Kanban", startDate: "", endDate: "" });
     setShowAdd(true);
   }
 
@@ -68,7 +74,13 @@ export default function Profile() {
     try {
       setError(null);
       console.log('[Profile] creating project with managementMethod:', form.managementMethod);
-      const created = await createProject({ title: form.name, description: form.description, managementMethod: form.managementMethod });
+      const created = await createProject({ 
+        title: form.name, 
+        description: form.description, 
+        managementMethod: form.managementMethod,
+        startDate: form.startDate,
+        endDate: form.endDate
+      });
       console.log('[Profile] created project:', created);
       setProjects(prev => [created, ...prev]);
       setShowAdd(false);
@@ -79,7 +91,7 @@ export default function Profile() {
 
   async function handleDeleteProject(projectId, e) {
     e.stopPropagation();
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer ce projet?")) {
+    if (window.confirm("Are you sure you want to delete this project?")) {
       try {
         setError(null);
         await deleteProject(projectId);
@@ -96,59 +108,59 @@ export default function Profile() {
         <header className="profile-header">
           <div>
             <h1>Dashboard</h1>
-            <p>Bienvenue {user?.firstName ? `, ${user.firstName}` : ""} — voici un aperçu rapide de vos projets</p>
+            <p>Welcome{user?.firstName ? `, ${user.firstName}` : ""} — here's a quick overview of your projects</p>
           </div>
           <div className="header-buttons">
-            <button className="btn primary" onClick={handleOpenAdd}>Ajouter un projet</button>
+            <button className="btn primary" onClick={handleOpenAdd}>Add project</button>
           </div>
         </header>
 
         {error && <p className="muted" style={{ color: "red" }}>{error}</p>}
-        {loading && <p className="muted">Chargement...</p>}
+        {loading && <p className="muted">Loading...</p>}
 
         <section className="profile-stats stats-row">
           <div className="stat">
             <div className="stat-value">{counts.activeProjects}</div>
-            <div className="stat-label">Projets actifs</div>
+            <div className="stat-label">Active projects</div>
           </div>
           <div className="stat">
             <div className="stat-value">{counts.upcomingTasks}</div>
-            <div className="stat-label">Tâches à venir</div>
+            <div className="stat-label">Upcoming tasks</div>
           </div>
           <div className="stat">
             <div className="stat-value">{counts.teams}</div>
-            <div className="stat-label">Équipes</div>
+            <div className="stat-label">Teams</div>
           </div>
           <div className="stat">
             <div className="stat-value">{advancementPercent}%</div>
-            <div className="stat-label">Progression globale</div>
+            <div className="stat-label">Overall progress</div>
           </div>
         </section>
 
         <div className="main-grid">
           <main className="projects-column">
-            <h2 className="section-title">Vos projets</h2>
+            <h2 className="section-title">Your projects</h2>
             <section className="project-list">
-              {projects.length === 0 && <p className="muted">Pas encore de projets. Ajoutez-en un !</p>}
+              {projects.length === 0 && <p className="muted">No projects yet. Add one!</p>}
               {projects.map((p) => (
                 <article key={p._id} className="project-card" onClick={() => navigate(`/project/${p._id}`)}>
                   <div className="card-header">
                     <div>
                       <h3>{p.title}</h3>
                       <p className="muted small">{p.description}</p>
-                      <p className="muted small">Méthode: <strong>{p.managementMethod || 'Kanban'}</strong></p>
+                      <p className="muted small">Method: <strong>{p.managementMethod || 'Kanban'}</strong></p>
                     </div>
                     <button 
                       className="btn-card-delete"
                       onClick={(e) => handleDeleteProject(p._id, e)}
-                      title="Supprimer le projet"
+                      title="Delete project"
                     >
-                      Supprimer
+                      Delete
                     </button>
                   </div>
                   <div className="meta">
-                    <span>{p.members?.length || 0} membres</span>
-                    <span>{(tasksByProject[p._id] || []).length} tâches</span>
+                    <span>{p.members?.length || 0} members</span>
+                    <span>{(tasksByProject[p._id] || []).length} tasks</span>
                   </div>
                 </article>
               ))}
@@ -156,12 +168,12 @@ export default function Profile() {
           </main>
 
           <aside className="sidebar">
-            <h3>Tâches à venir</h3>
+            <h3>Upcoming Tasks</h3>
             <ul className="upcoming-list">
               {Object.values(tasksByProject).flat().slice(0,5).map(t => (
-                <li key={t._id} className="upcoming-item">{t.title || 'Tâche sans titre'}</li>
+                <li key={t._id} className="upcoming-item">{t.title || 'Untitled task'}</li>
               ))}
-              {Object.values(tasksByProject).flat().length === 0 && <li className="muted">Pas de tâches à venir</li>}
+              {Object.values(tasksByProject).flat().length === 0 && <li className="muted">No upcoming tasks</li>}
             </ul>
           </aside>
         </div>
@@ -170,10 +182,10 @@ export default function Profile() {
       {showAdd && (
         <div className="modal" onClick={() => setShowAdd(false)}>
           <div className="modal-inner" onClick={e=>e.stopPropagation()}>
-            <h2>Nouveau projet</h2>
+            <h2>New Project</h2>
             <form onSubmit={handleSubmitAdd} className="form">
               <label>
-                Nom
+                Name
                 <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
               </label>
               <label>
@@ -181,17 +193,35 @@ export default function Profile() {
                 <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
               </label>
               <label>
-                Méthode de gestion
+                Management method
                 <select value={form.managementMethod} onChange={e => setForm(f => ({ ...f, managementMethod: e.target.value }))}>
                   <option value="Kanban">Kanban</option>
                   <option value="Scrum">Scrum</option>
                   <option value="Waterfall">Waterfall</option>
                 </select>
               </label>
+              
+              <label>
+                Start date
+                <input 
+                  type="date" 
+                  value={form.startDate} 
+                  onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))} 
+                />
+              </label>
+              
+              <label>
+                End date
+                <input 
+                  type="date" 
+                  value={form.endDate} 
+                  onChange={e => setForm(f => ({ ...f, endDate: e.target.value }))} 
+                />
+              </label>
 
               <div className="actions">
-                <button type="button" className="btn" onClick={() => setShowAdd(false)}>Annuler</button>
-                <button type="submit" className="btn primary">Créer</button>
+                <button type="button" className="btn" onClick={() => setShowAdd(false)}>Cancel</button>
+                <button type="submit" className="btn primary">Create</button>
               </div>
             </form>
           </div>

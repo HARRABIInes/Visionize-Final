@@ -54,11 +54,13 @@ export default function Project() {
         const p = await getProject(id);
         setProject(p);
         setProjectForm({ title: p.title || "", description: p.description || "", managementMethod: p.managementMethod || "Kanban" });
-        // Initialiser activeView basé sur la méthode
+        // Initialiser activeView basé sur la méthode de gestion
         if (p.managementMethod === 'Kanban') {
           setActiveView('kanban');
+        } else if (p.managementMethod === 'Scrum') {
+          setActiveView('scrum');
         } else {
-          setActiveView('gantt');
+          setActiveView('gantt'); // Waterfall = Gantt uniquement
         }
         const t = await listTasks(id);
         setTasks(t);
@@ -76,8 +78,10 @@ export default function Project() {
     if (project) {
       if (project.managementMethod === 'Kanban') {
         setActiveView('kanban');
+      } else if (project.managementMethod === 'Scrum') {
+        setActiveView('scrum');
       } else {
-        setActiveView('gantt');
+        setActiveView('gantt'); // Waterfall = Gantt uniquement
       }
     }
   }, [project?.managementMethod]);
@@ -254,7 +258,8 @@ export default function Project() {
 
       <section className="views-selector">
         <h4>Visualization:</h4>
-        {project.managementMethod === 'Kanban' ? (
+        {/* Kanban: Kanban Board + Gantt Chart */}
+        {project.managementMethod === 'Kanban' && (
           <>
             <button className={`view-btn ${activeView === 'kanban' ? 'active' : ''}`} onClick={() => setActiveView('kanban')}>
               📊 Kanban Board
@@ -263,15 +268,25 @@ export default function Project() {
               📈 Gantt Chart
             </button>
           </>
-        ) : (
+        )}
+        
+        {/* Scrum: Scrum Board + Gantt Chart */}
+        {project.managementMethod === 'Scrum' && (
           <>
-            <button className={`view-btn ${activeView === 'gantt' ? 'active' : ''}`} onClick={() => setActiveView('gantt')}>
-              📈 Gantt Chart
-            </button>
             <button className={`view-btn ${activeView === 'scrum' ? 'active' : ''}`} onClick={() => setActiveView('scrum')}>
               🎯 Scrum Board
             </button>
+            <button className={`view-btn ${activeView === 'gantt' ? 'active' : ''}`} onClick={() => setActiveView('gantt')}>
+              📈 Gantt Chart
+            </button>
           </>
+        )}
+        
+        {/* Waterfall: Seulement Gantt Chart */}
+        {project.managementMethod === 'Waterfall' && (
+          <button className={`view-btn active`}>
+            📈 Gantt Chart
+          </button>
         )}
       </section>
 
