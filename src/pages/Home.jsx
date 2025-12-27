@@ -280,15 +280,14 @@ export default function Home() {
             and collaborate efficiently.
           </p>
           <div className="video-container">
-            <iframe
+            <video
               width="560"
               height="315"
-              src="https://www.youtube.com/embed/9tMPay7V0Dg"
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            ></iframe>
+              controls
+            >
+              <source src="/assets/video/tuto.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </section>
 
